@@ -21,21 +21,20 @@ def FindBrightLevel():
 
 def DarkenScreen():
     x = sbc.get_brightness()
-    sbc.set_brightness(0)
+    sbc.set_brightness(0, force=True)
     time.sleep(1)
-    sbc.fade_brightness(x)
+    sbc.fade_brightness(x, logarithmic=True)
     return
 
 formerbright=FindBrightLevel()
 
-def ScanScreen(scheduler): 
-    scheduler.enter(0.0166, 1, ScanScreen, (scheduler,))
-    currentbright = FindBrightLevel()
-    print(currentbright)
-    if currentbright-formerbright >= 2:
-        print('uhoh')
-    return
+def ScanScreen():
+    global formerbright 
+    while True:
+        currentbright = FindBrightLevel()
+        print(currentbright)
+        if currentbright-formerbright >= 2:
+            DarkenScreen()
+        formerbright=currentbright
 
-screenscheduler = sched.scheduler(time.time, time.sleep)
-screenscheduler.enter(0.0166, 1, ScanScreen, (screenscheduler,))
-screenscheduler.run()
+ScanScreen()
