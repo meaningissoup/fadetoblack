@@ -1,3 +1,5 @@
 numpy
 Pillow
 screen-brightness-control
+sched
+time
